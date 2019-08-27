@@ -1,14 +1,14 @@
 N <- 10000 # number of max mitochondria in cell 
-# Nm <- d_mit * N # number of mitochondria
-Nm <- 100 # number of mitochondria in cell
 Nmb <- 1000 # number of Mb in cell
 Nb <- 100
 masses <- c(1, 10, 50, 100, 500, 1000, 2000, 3000)
 
+# Assumption:
+# Mb density ~ 0.3*Mass^(-1/4)
 
 
-getDist1D <- function(masses, S,  Nb, N) {
-  R <- 1:(S) # 2D space
+getDist1D <- function(masses, S, Nb, N) {
+  R <- 1:(S) # 1D space
   
   result.mt <- vector(mode = "list", length = length(masses))
   result.mb <- vector(mode = "list", length = length(masses))
@@ -180,43 +180,5 @@ summary(lm(log10(unlist(lapply(D2$result.mb, mean))) ~ log10(masses)))
 summary(lm(log10(unlist(lapply(D3$result.mb, mean))) ~ log10(masses)))
 
 
-Mb.conc <- ceiling(x = masses^(1.21))
-# Nm.conc <- ceiling(x = 100*masses^(-1/4))
 
 
-meanD <- numeric(length = length(D2$mean.dist))
-for(s in 1:length(D2$mean.dist)) {
-  meanD[s] <- mean(D2$mean.dist[[s]])
-}
-
-summary(lm(log10(meanD)~log10(masses)))
-summary(lm(log10(meanD)~log10(Mb.conc)))
-summary(lm(log10(Mb.conc)~log10(masses)))
-
-cols <- c("#000000", "#ff0000", "#ffb3b3", "#99b3ff", "#0039e6", "#00cc33", "darkgray")
-plot(density(d$mean.dist[[1]]), xlim = c(0, 6))
-for(s in 1:length(d$mean.dist)) {
-  if(s > 1) {
-    points(density(d$all.dist[[s]]), type = "l", col = cols[s])
-  }
-}
-
-# require(ggplot2)
-# ggplot(data = data.frame(d = meanD, n = d$Nms))+
-#   geom_point(aes(x = n, y = d))+
-#   scale_y_log10()+
-#   scale_x_log10()
-
-# ggplot(data = data.frame(d = meanD, n = d$Nms))+
-#   geom_point(aes(x = n, y = d))
-
-masses <- (1:10)^10
-
-summary(lm(log10(d$Nms) ~ log10(meanD)))
-summary(lm(log10(d$Nms) ~ log10(masses)))
-summary(lm(log10(meanD) ~ log10(d$Nms)))
-summary(lm(d$Nms ~ meanD))
-summary(lm(meanD ~ d$Nms))
-
-
-# make a grid Nm x Nmb and compute ratio for different grids
